@@ -1,1 +1,0 @@
-DocIndex	BiDocProb	TriDocProb	DocScore	DocType
