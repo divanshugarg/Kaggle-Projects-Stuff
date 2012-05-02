@@ -32,3 +32,13 @@ temp = brown.tagged_sents(categories='adventure')
 for sent in temp:
     for (w1,t1),(w2,t2),(w3,t3) in nltk.trigrams(sent):
 	trigram_counts[(t1,t2,t3)] += 1
+
+
+with open('/Users/sinn/Kaggle-Projects-Stuff/The Hewlett Foundation- Automated Essay Scoring/Data-Generated/essay08_byScores.txt', 'w') as f1:
+	for s in score_values:
+		targets = scores[str(s)]
+		temp_str_out = str()
+		for d in docs:
+			if d[0] in targets:
+				temp_str_out += d[2]+'\n\n'
+		f1.write(str(s) + '\n' + temp_str_out + '\n')
