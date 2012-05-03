@@ -133,3 +133,21 @@ pro_poss_keep = [w for w,t in nltk.pos_tag(pro_keep) if t=='PRP$']
 pro_keep = list(set(pro_keep).difference(pro_poss_keep)).append('his') #
 '''his is both...because of this, do pro_poss_keep 1st, eval & change if nec?'''
 
+'''Tag the basic stuff'''
+for w in temp_words:
+    if w.lower() in prep_keep:
+        new = (w, 'P')
+    elif w.lower() in pro_poss:
+        new = (w, 'PRO$')
+    elif w.lower() in pro_keep:
+        new = (w, 'PRO')
+    elif w.lower() in det_keep:
+        new = (w, 'DET')
+    elif w.lower() in conj_keep:
+        new = (w, 'CNJ')
+    elif w.lower() in noun_keep:
+        new = (w, 'NN')
+    elif w.lower() in wh.keep:
+        new = (w, 'WH')
+    else: new = (w, '')
+    temp_tagged_words.append(new)

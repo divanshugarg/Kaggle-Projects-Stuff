@@ -1,3 +1,25 @@
+def applyTags(text):
+    '''Tag the basic stuff'''
+    tagged_text = list()
+    for w in text:
+        if w.lower() in prep_keep:
+            new = (w, 'P')
+        elif w.lower() in pro_poss:
+            new = (w, 'PRO$')
+        elif w.lower() in pro_keep:
+            new = (w, 'PRO')
+        elif w.lower() in det_keep:
+            new = (w, 'DET')
+        elif w.lower() in conj_keep:
+            new = (w, 'CNJ')
+        elif w.lower() in noun_keep:
+            new = (w, 'NN')
+        elif w.lower() in wh_keep:
+            new = (w, 'WH')
+        else: new = (w, '')
+        tagged_text.append(new)
+    return tagged_text
+
 def simpleSplitter(w,t,start,current_phrase):
     if t=='PRO':
         # look for Prep, Det, Punc, unless encounter cnj
@@ -18,11 +40,16 @@ def simpleSplitter(w,t,start,current_phrase):
             print current_phrase
         current_phrase = w
         start = t
+    # reconsider including this...
     elif w.lower().strip()=='that':
-        print current_phrase
-        print 'that'
-        current_phrase = ''
-        start = 'PRO'
+        if previous[-1] in verb_types:
+            print current_phrase
+            print 'that'
+            current_phrase = ''
+            start = 'PRO'
+        else:
+            current_phrase += w.lower()
+            # start NP
     elif t=='CNJ':
         start = t
         current_phrase += ' ' + w
@@ -30,7 +57,7 @@ def simpleSplitter(w,t,start,current_phrase):
         print current_phrase
         start = '$'
         current_phrase = ''
-    elif w in wh_keep:
+    elif t=='WH':
         if start=='$':
             print w
             current_phrase = ''
@@ -43,8 +70,13 @@ def simpleSplitter(w,t,start,current_phrase):
         else:
             current_phrase += ' ' + w
     elif t=='DET':
-        current_phrase += ' ' + w
-        start = 'DET'
+        if start in ['NN']:
+            print current_phrase
+            current_phrase = w
+            start = 'DET'
+        else:
+            current_phrase += ' ' + w
+            start = 'DET'
     else:
         current_phrase += ' ' + w
     return current_phrase, start
